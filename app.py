@@ -23,6 +23,7 @@ def forecast():
             "timezone": "auto",
         },
     )
+    
     daily = response.json()["daily"]
 
     return jsonify({
