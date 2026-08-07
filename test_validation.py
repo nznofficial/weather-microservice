@@ -1,3 +1,4 @@
+import requests
 from unittest.mock import patch
 
 from app import app
