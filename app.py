@@ -1,39 +1,8 @@
-from flask import Flask, request, jsonify
-import requests
-
-app = Flask(__name__)
-
-@app.route("/forecast")
-def forecast():
-    lat = request.args.get("lat")
-    lon = request.args.get("lon")
-    date = request.args.get("date")
-
-    # Validate inputs and Error Handling to be updated by Eitan
-
-    response = requests.get(
-        "https://api.open-meteo.com/v1/forecast",
-        params={
-            "latitude": lat,
-            "longitude": lon,
-            "start_date": date,
-            "end_date": date,
-            "daily": ["temperature_2m_max", "temperature_2m_min"],
-            "temperature_unit": "fahrenheit",
-            "timezone": "auto",
-        },
-    )
-    
-    daily = response.json()["daily"]
-
-    return jsonify({
-        "temp_max_f": daily["temperature_2m_max"][0],
-        "temp_min_f": daily["temperature_2m_min"][0],
-    })
-
 from datetime import date, datetime
+
 from flask import Flask, request, jsonify
 import requests
+
 
 app = Flask(__name__)
 
@@ -91,6 +60,7 @@ def forecast():
     requested_date = request.args.get("date")
 
     coordinate_error = validate_coordinates(lat, lon)
+
     if coordinate_error:
         return error_response(
             400,
@@ -99,6 +69,7 @@ def forecast():
         )
 
     date_error = validate_date(requested_date)
+
     if date_error:
         return error_response(
             400,
@@ -152,6 +123,7 @@ def forecast():
         "temp_max_f": temp_max,
         "temp_min_f": temp_min,
     })
+
 
 if __name__ == "__main__":
     app.run(port=8002)
