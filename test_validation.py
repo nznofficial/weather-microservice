@@ -49,6 +49,20 @@ def test_invalid_date_format():
 
 
 @patch("app.requests.get")
+def test_unsupported_forecast_date(mock_get):
+    mock_get.return_value.status_code = 400
+
+    client = app.test_client()
+
+    response = client.get(
+        "/forecast?lat=36.1147&lon=-115.2015&date=2099-01-01"
+    )
+
+    assert response.status_code == 400
+    assert response.get_json()["error"] == "unsupported_date"
+
+
+@patch("app.requests.get")
 def test_provider_failure(mock_get):
     mock_get.side_effect = requests.RequestException()
 
